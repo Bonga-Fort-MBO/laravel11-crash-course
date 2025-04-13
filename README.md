@@ -2,6 +2,8 @@
 
 A simple personal notes manager application, inside which can register, login and create personal notes.
 
+
+
 ## Installation
 1. Clone the project
 2. Navigate to the project's root directory using terminal

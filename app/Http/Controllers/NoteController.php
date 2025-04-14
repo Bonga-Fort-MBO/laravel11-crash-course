@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreNoteRequest;
+use App\Http\Requests\UpdateNoteRequest;
+use Illuminate\Support\Facades\Gate;
 
 class NoteController extends Controller
 {
@@ -24,22 +26,21 @@ class NoteController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Note::class);
         return view('note.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNoteRequest $request)
     {
-        $data = $request->validate([
-            'note' => ['required', 'string']
-        ]);
+        $data = $request->validated();
 
         $data['user_id'] = $request->user()->id;
         $note = Note::create($data);
 
-        return to_route('note.show', $note)->with('message', 'Note was create');
+        return to_route('note.show', $note)->with('message', 'Note was created');
     }
 
     /**
@@ -47,9 +48,8 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        if ($note->user_id !== request()->user()->id) {
-            abort(403);
-        }
+
+        Gate::authorize('view', $note);
         return view('note.show', ['note' => $note]);
     }
 
@@ -58,24 +58,17 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        if ($note->user_id !== request()->user()->id) {
-            abort(403);
-        }
+        Gate::authorize('update',$note);
         return view('note.edit', ['note' => $note]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note)
+    public function update(UpdateNoteRequest $request, Note $note)
     {
-        if ($note->user_id !== request()->user()->id) {
-            abort(403);
-        }
-        $data = $request->validate([
-            'note' => ['required', 'string']
-        ]);
-
+        $data = $request->validated();
+        Gate::authorize('update',$note);
         $note->update($data);
 
         return to_route('note.show', $note)->with('message', 'Note was updated');
@@ -86,9 +79,7 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        if ($note->user_id !== request()->user()->id) {
-            abort(403);
-        }
+        Gate::authorize('delete',$note);
         $note->delete();
 
         return to_route('note.index')->with('message', 'Note was deleted');

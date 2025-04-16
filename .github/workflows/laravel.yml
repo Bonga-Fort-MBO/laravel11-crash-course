@@ -1,0 +1,43 @@
+name: Laravel CI/CD
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Consider upgrading from 8.0 if Laravel 11 supports it
+        extensions: mbstring, bcmath, xml, ctype, fileinfo, json, tokenizer, curl, pdo, sqlite
+
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    - name: Install Composer Dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+    - name: Generate App Key
+      run: php artisan key:generate --ansi
+
+    - name: Set Permissions
+      run: chmod -R 777 storage bootstrap/cache
+
+    - name: Create SQLite Database
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+
+    - name: Run Tests (PHPUnit / Pest)
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+        APP_ENV: testing
+      run: php artisan test

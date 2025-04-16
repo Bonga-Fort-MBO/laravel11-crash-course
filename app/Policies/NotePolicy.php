@@ -32,4 +32,6 @@ class NotePolicy
     {
         return $note->user_id === $user->id;
     }
+
+
 }

@@ -22,7 +22,7 @@ class UpdateNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'required', 'string'
+            "note"=> "string|required",
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Actions\Note\GetNotes;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Gate;
@@ -12,16 +13,11 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(GetNotes $getNotes)
     {
-        $notes = Note::query()
-            ->when(request()->user()->role !== 'admin', function ($query) {
-                $query->where('user_id', request()->user()->id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate();
+        $notes = $getNotes();
 
-        return view('note.index', ['notes' => $notes]);
+        return view('note.index', compact('notes'));
     }
 
 

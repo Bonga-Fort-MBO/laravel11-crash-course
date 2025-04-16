@@ -2,7 +2,9 @@ name: Laravel CI/CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main", "dev" ] # optionally add dev branch
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   laravel-tests:

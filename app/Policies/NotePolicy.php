@@ -13,14 +13,14 @@ class NotePolicy
         return true;
     }
 
-    public function view(User $user, Note $note): bool
-    {
-        return $note->user_id === $user->id;
-    }
+    public function view(User $user, Note $note)
+{
+    return $note->user_id === $user->id || $user->role === 'admin';
+}
 
     public function create(User $user): bool
     {
-        return true; // All authenticated users can create
+        return true;
     }
 
     public function update(User $user, Note $note): bool

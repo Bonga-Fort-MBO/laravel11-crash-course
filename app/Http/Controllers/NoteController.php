@@ -15,11 +15,15 @@ class NoteController extends Controller
     public function index()
     {
         $notes = Note::query()
-            ->where('user_id', request()->user()->id)
+            ->when(request()->user()->role !== 'admin', function ($query) {
+                $query->where('user_id', request()->user()->id);
+            })
             ->orderBy('created_at', 'desc')
             ->paginate();
+
         return view('note.index', ['notes' => $notes]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -58,7 +62,7 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        Gate::authorize('update',$note);
+        Gate::authorize('update', $note);
         return view('note.edit', ['note' => $note]);
     }
 
@@ -68,7 +72,7 @@ class NoteController extends Controller
     public function update(UpdateNoteRequest $request, Note $note)
     {
         $data = $request->validated();
-        Gate::authorize('update',$note);
+        Gate::authorize('update', $note);
         $note->update($data);
 
         return to_route('note.show', $note)->with('message', 'Note was updated');
@@ -79,7 +83,7 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        Gate::authorize('delete',$note);
+        Gate::authorize('delete', $note);
         $note->delete();
 
         return to_route('note.index')->with('message', 'Note was deleted');

@@ -18,7 +18,7 @@ class NoteFactory extends Factory
     {
         return [
             'note' => fake()->realText(2000),
-            'user_id' => 1
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

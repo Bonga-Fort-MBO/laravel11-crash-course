@@ -2,27 +2,54 @@
 
 A simple personal notes manager application, inside which can register, login and create personal notes.
 
-A user can make notes, edit their own Notes, delete their own Notes, and view only their own Notes
-
 
 ## Features (v2)
+
 
 - 👤 Users can:
   - Create, edit, delete their own notes
   - View only their own notes
 
 - 👑 Admins can:
+  - Create notes only seen by Admin
   - View, edit, delete **all notes**
-  - Manage users (future-ready)
 
+### ⚙️ Developer Features 
+  - Actions stored in `App\Actions`
+```bash
+php artisan make:action [ActionName]
+```
+  - Test for NotesController 
+  ```bash
+  php artisan test`
+  ```
+  
 ## Role-Based Access
 
 Authorization is handled via Laravel Policies:
-- `NotePolicy@view` returns:
-  ```php
-  return $user->role === 'admin' || $note->user_id === $user->id;
+  `NotePolicy@view`,
+  `NotePolicy@update`,
+  `NotePolicy@delete` 
+  returns:
+```php
+return $user->role === 'admin' || $note->user_id === $user->id;
+```
 
 
+
+
+## 🧱 Optional: Production Safety Config
+
+- In AppServiceProvider.php, to enforce stricter development behavior:
+
+```php
+public function boot(): void
+{
+    Model::shouldBeStrict(!app()->isProduction());
+    DB::prohibitDestructiveCommands(app()->isProduction());
+    Model::preventAccessingMissingAttributes(!app()->isProduction());
+}
+```
 ## Installation
 1. Clone the project
 2. Navigate to the project's root directory using terminal

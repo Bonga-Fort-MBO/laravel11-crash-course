@@ -25,7 +25,10 @@ jobs:
 
     - name: Install Composer Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
-
+      
+    - name: Install Dependencies
+      run: npm install
+  
     - name: Generate App Key
       run: php artisan key:generate --ansi
 

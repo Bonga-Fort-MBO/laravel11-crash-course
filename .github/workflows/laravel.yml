@@ -2,7 +2,7 @@ name: Laravel CI/CD
 
 on:
   push:
-    branches: [ "main", "dev" ] # optionally add dev branch
+    branches: [ "main", "dev" ] # also triggers on dev pushes
   pull_request:
     branches: [ "main" ]
 
@@ -17,7 +17,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2' # Consider upgrading from 8.0 if Laravel 11 supports it
+        php-version: '8.2'
         extensions: mbstring, bcmath, xml, ctype, fileinfo, json, tokenizer, curl, pdo, sqlite
 
     - name: Copy .env
@@ -25,10 +25,13 @@ jobs:
 
     - name: Install Composer Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
-      
-    - name: Install Dependencies
+
+    - name: Install NPM Dependencies
       run: npm install
-  
+
+    - name: Build Frontend (Vite)
+      run: npm run build
+
     - name: Generate App Key
       run: php artisan key:generate --ansi
 

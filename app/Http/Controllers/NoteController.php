@@ -16,7 +16,6 @@ class NoteController extends Controller
     public function index(GetNotes $getNotes)
     {
         $notes = $getNotes();
-
         return view('note.index', compact('notes'));
     }
 
@@ -27,6 +26,7 @@ class NoteController extends Controller
     public function create()
     {
         Gate::authorize('create', Note::class);
+
         return view('note.create');
     }
 
@@ -71,7 +71,8 @@ class NoteController extends Controller
         Gate::authorize('update', $note);
         $note->update($data);
 
-        return to_route('note.show', $note)->with('message', 'Note was updated');
+        return to_route('note.show', $note)
+        ->with('message', 'Note was updated');
     }
 
     /**

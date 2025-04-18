@@ -14,9 +14,9 @@ class NotePolicy
     }
 
     public function view(User $user, Note $note)
-{
-    return $note->user_id === $user->id || $user->role === 'admin';
-}
+    {
+        return $note->user_id === $user->id || $user->role === 'admin';
+    }
 
     public function create(User $user): bool
     {
@@ -32,6 +32,4 @@ class NotePolicy
     {
         return $note->user_id === $user->id;
     }
-
-
 }

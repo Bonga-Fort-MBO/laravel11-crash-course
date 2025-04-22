@@ -40,7 +40,8 @@ class NoteController extends Controller
         $data['user_id'] = $request->user()->id;
         $note = Note::create($data);
 
-        return to_route('note.show', $note)->with('message', 'Note was created');
+        return to_route('note.show', $note)
+        ->with('message', 'Note was created');
     }
 
     /**
@@ -70,7 +71,6 @@ class NoteController extends Controller
         $data = $request->validated();
         Gate::authorize('update', $note);
         $note->update($data);
-
         return to_route('note.show', $note)
         ->with('message', 'Note was updated');
     }

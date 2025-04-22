@@ -30,6 +30,6 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        return $note->user_id === $user->id;
+        return $note->user_id === $user->id || $user->role == 'admin';
     }
 }

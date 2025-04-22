@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserManagerController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/note')->name('dashboard');
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::delete('/note/{id}', [NoteController::class, 'destroy'])->name('note.destroy');
 
     Route::resource('note', NoteController::class);
+    Route::resource('users', UserManagerController::class);
 });
 
 Route::middleware('auth')->group(function () {
